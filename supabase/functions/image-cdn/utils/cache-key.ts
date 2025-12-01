@@ -11,7 +11,6 @@ export function getExtensionFromFormat(format: ImageFormat): string {
     const extensions: Record<ImageFormat, string> = {
         jpeg: "jpg",
         png: "png",
-        webp: "webp",
     };
     return extensions[format];
 }
@@ -23,7 +22,6 @@ export function getMimeType(format: ImageFormat): string {
     const mimeTypes: Record<ImageFormat, string> = {
         jpeg: "image/jpeg",
         png: "image/png",
-        webp: "image/webp",
     };
     return mimeTypes[format];
 }
@@ -40,8 +38,6 @@ export function inferFormatFromPath(path: string): ImageFormat {
             return "jpeg";
         case "png":
             return "png";
-        case "webp":
-            return "webp";
         default:
             return "jpeg"; // default fallback
     }

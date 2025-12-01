@@ -12,7 +12,7 @@ Supabase Storage.
   Supabase Storage
 - **Multiple Fit Modes**: `cover`, `contain`, and `fill` to handle different use
   cases
-- **Format Conversion**: Convert between JPEG, PNG, and WebP
+- **Format Conversion**: Convert between JPEG and PNG
 - **Quality Control**: Adjust compression quality for optimal file sizes
 - **Crop Positioning**: Choose crop anchor points (center, top, bottom, left,
   right)
@@ -112,7 +112,7 @@ supabase functions deploy image-cdn
 Upload a test image to your `images` bucket, then try:
 
 ```bash
-curl "https://YOUR_PROJECT.functions.supabase.co/image-cdn?bucket=images&path=test.jpg&w=400&format=webp" -o test.webp
+curl "https://YOUR_PROJECT.functions.supabase.co/image-cdn?bucket=images&path=test.jpg&w=400&format=png" -o test.png
 ```
 
 ## 🧪 Local Testing
@@ -241,15 +241,15 @@ curl "http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&
 #### Test 2: Create Thumbnail
 
 ```bash
-# 256x256 square thumbnail in WebP
-curl "http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&w=256&h=256&fit=cover&format=webp&q=80" -o thumbnail.webp
+# 256x256 square thumbnail in png
+curl "http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&w=256&h=256&fit=cover&format=png&q=80" -o thumbnail.png
 ```
 
 #### Test 3: Format Conversion
 
 ```bash
-# Convert to WebP with quality 90
-curl "http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&format=webp&q=90" -o test.webp
+# Convert to png with quality 90
+curl "http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&format=png&q=90" -o test.png
 ```
 
 #### Test 4: Verify Caching
@@ -269,7 +269,7 @@ You should see a significant speed difference!
 Open in your browser:
 
 ```
-http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&w=600&format=webp
+http://localhost:54321/functions/v1/image-cdn?bucket=images&path=test.jpg&w=600&format=png
 ```
 
 The image should display directly!
@@ -376,7 +376,7 @@ GET https://YOUR_PROJECT.functions.supabase.co/image-cdn
 | `w`       | integer | Target width in pixels    | 1-MAX_WIDTH                                | -        |
 | `h`       | integer | Target height in pixels   | 1-MAX_HEIGHT                               | -        |
 | `fit`     | string  | Resize fit mode           | `cover`, `contain`, `fill`                 | `cover`  |
-| `format`  | string  | Output format             | `jpeg`, `png`, `webp`                      | original |
+| `format`  | string  | Output format             | `jpeg`, `png`                              | original |
 | `q`       | integer | Quality for lossy formats | 1-100                                      | 80       |
 | `bg`      | string  | Background color (hex)    | `ffffff`, `000000`                         | -        |
 | `crop`    | string  | Crop position             | `center`, `top`, `bottom`, `left`, `right` | `center` |
@@ -436,7 +436,7 @@ Resize to 800px width, maintain aspect ratio:
 Create a square thumbnail (crop excess):
 
 ```
-/image-cdn?bucket=images&path=avatar.png&w=256&h=256&fit=cover&format=webp&q=80
+/image-cdn?bucket=images&path=avatar.png&w=256&h=256&fit=cover&format=png&q=80
 ```
 
 ### Product Image with Contain
@@ -449,10 +449,10 @@ Fit product image without cropping:
 
 ### Format Conversion
 
-Convert PNG to WebP with quality:
+Convert JPG to PNG with quality:
 
 ```
-/image-cdn?bucket=images&path=logo.png&format=webp&q=90
+/image-cdn?bucket=images&path=logo.jpg&format=png&q=90
 ```
 
 ### Responsive Images
@@ -461,9 +461,9 @@ Generate multiple sizes for responsive design:
 
 ```html
 <img
-  src="/image-cdn?bucket=images&path=hero.jpg&w=400&format=webp"
-  srcset="/image-cdn?bucket=images&path=hero.jpg&w=800&format=webp 2x,
-          /image-cdn?bucket=images&path=hero.jpg&w=1200&format=webp 3x"
+  src="/image-cdn?bucket=images&path=hero.jpg&w=400&format=png"
+  srcset="/image-cdn?bucket=images&path=hero.jpg&w=800&format=png 2x,
+          /image-cdn?bucket=images&path=hero.jpg&w=1200&format=png 3x"
   alt="Hero image"
 />
 ```
@@ -517,7 +517,7 @@ const signedUrl = generateSignedUrl({
   w: 800,
   h: 600,
   fit: "cover",
-  format: "webp",
+  format: "png",
   q: 80,
 });
 ```
@@ -550,7 +550,7 @@ signed_url = generate_signed_url({
     'w': 800,
     'h': 600,
     'fit': 'cover',
-    'format': 'webp',
+    'format': 'png',
     'q': 80
 }, 'your-secret-key')
 ```
@@ -561,12 +561,12 @@ Will receive a `403 Forbidden` response.
 
 ## 🎯 Best Practices
 
-### 1. Use WebP When Possible
+### 1. Use png When Possible
 
-WebP typically produces 25-35% smaller files than JPEG:
+png typically produces 25-35% smaller files than JPEG:
 
 ```
-format=webp&q=80
+format=png&q=80
 ```
 
 ### 2. Set Appropriate Quality
@@ -646,7 +646,7 @@ images may timeout:
 ### Transformation Errors (500)
 
 - Check function logs in Supabase Dashboard
-- Verify image format is supported (JPEG, PNG, WebP)
+- Verify image format is supported (JPEG, PNG, png)
 - Ensure image isn't corrupted
 - Check if image size exceeds memory limits
 
@@ -667,7 +667,7 @@ Future enhancements to consider:
 - [ ] **Watermarking** support
 - [ ] **Blur/sharpen filters**
 - [ ] **Rotation** and **flip** transformations
-- [ ] **Animated GIF/WebP** support
+- [ ] **Animated GIF/png** support
 - [ ] **AVIF format** support
 - [ ] **Metrics and analytics** (transformation counts, cache hit rates)
 - [ ] **Cache invalidation** API

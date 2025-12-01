@@ -3,7 +3,7 @@
  */
 
 export type FitMode = "cover" | "contain" | "fill";
-export type ImageFormat = "jpeg" | "png" | "webp";
+export type ImageFormat = "jpeg" | "png";
 export type CropPosition = "center" | "top" | "bottom" | "left" | "right";
 
 export interface TransformConfig {
@@ -90,7 +90,7 @@ function parseFitMode(value: string | null): FitMode {
 function parseFormat(value: string | null): ImageFormat | null {
     if (!value) return null; // keep original format
 
-    const validFormats: ImageFormat[] = ["jpeg", "png", "webp"];
+    const validFormats: ImageFormat[] = ["jpeg", "png"];
     if (!validFormats.includes(value as ImageFormat)) {
         throw new Error(
             `Invalid format: ${value}. Allowed values: ${validFormats.join(", ")}`,

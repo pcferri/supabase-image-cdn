@@ -2,7 +2,7 @@
  * Image transformation utilities using ImageScript
  */
 
-import { decode, Image } from "imagescript";
+import { decode, GIF, Image } from "imagescript";
 import type { CropPosition, FitMode, ImageFormat, TransformConfig } from "./params.ts";
 
 /**
@@ -10,9 +10,14 @@ import type { CropPosition, FitMode, ImageFormat, TransformConfig } from "./para
  */
 async function decodeImage(imageData: Uint8Array): Promise<Image> {
     try {
-        return await decode(imageData);
+        const decoded = await decode(imageData);
+        if (decoded instanceof GIF) {
+            throw new Error("GIF format is not currently supported");
+        }
+        return decoded;
     } catch (error) {
-        throw new Error(`Failed to decode image: ${error.message}`);
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Failed to decode image: ${message}`);
     }
 }
 
@@ -188,14 +193,13 @@ async function encodeImage(
             case "jpeg":
                 return await image.encodeJPEG(quality);
             case "png":
-                return await image.encodePNG();
-            case "webp":
-                return await image.encodeWEBP(quality);
+                return await image.encode(quality);
             default:
                 throw new Error(`Unsupported format: ${format}`);
         }
     } catch (error) {
-        throw new Error(`Failed to encode image: ${error.message}`);
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Failed to encode image: ${message}`);
     }
 }
 
